@@ -1,2 +1,2 @@
 # TFBSTensor
-a tensor decomposition based method for imputation of transcription factor binding sites 
+TFBSTensor is a tensor decomposition based method for imputation of transcription factor binding sites 
