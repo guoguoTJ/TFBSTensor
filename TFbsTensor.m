@@ -46,7 +46,7 @@ for iters=1:5
     
     % Main Loop of the ALS algorithm: Iterate until convergence
     for iter = 1:maxiters
-        % Step1: Given factor matrix M,C，update G.
+        % Step1: Given factor matrix M,C锛寀pdate G.
         for i=1:num_observe
              X(i,:)=(M(O(i,1),:).*C(O(i,2),:));
         end
@@ -57,7 +57,7 @@ for iters=1:5
         G=(U*diag(1./(D+mean(D)*1e-6))*U'*(X')*Matrix_o)';
        PP = G'*Matrix_o';
 
-        %Step 2: Given fact matrix C and G，update M.
+        %Step 2: Given fact matrix C and G锛寀pdate M.
         A1 = ((G'*G));
         for i = 1:num_m
             o= O(O(:,1)==i,:);
@@ -106,7 +106,7 @@ for iters=1:5
     GMC=gpuArray(single(MC));
     GG=gpuArray(single(G));
     for k = 1:len
-        Mat_o_impute(:,k)=gather(sum((repmat(GMC(k,:),num_g,1)).*GG,2));%b可以从observe_array(:,i)提取
+        Mat_o_impute(:,k)=gather(sum((repmat(GMC(k,:),num_g,1)).*GG,2));
     end
     Mat_o_impute=Mat_o_impute';
     
@@ -122,7 +122,7 @@ for iters=1:5
     GMC=gpuArray(single(MC));
     GG=gpuArray(single(G));
     for k = 1:len
-        Mat_p(:,k)=gather(sum((repmat(GMC(k,:),num_g,1)).*GG,2));%b可以从observe_array(:,i)提取
+        Mat_p(:,k)=gather(sum((repmat(GMC(k,:),num_g,1)).*GG,2));%
     end
     Mat_p=Mat_p';
     
