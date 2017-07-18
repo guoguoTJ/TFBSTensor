@@ -10,10 +10,11 @@ TFbsTensor is a tensor decomposition-based method for imputation of TF-binding s
 ## Usage of TFbsTensor
 * The file ‘TFbsTensor.m’ is the implemented method to predict TF-binding data. 
 * Details on using the method and the parameters are given in the comments in the code.  
-## Examples:
+## Examples
 * Input datasets: DataTest1.mat. <br />
 * Running test_main.m to test the TFbsTensor method. <br />
---------------------------------
+
+
 If having any questions about the TFbsTensor method, please feel free to contact guoweili_henu@126.com. 
 
 
