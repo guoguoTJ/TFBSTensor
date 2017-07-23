@@ -1,21 +1,21 @@
 function [Mat_return]=TFbsTensor(Matrix_o,index_M, test_Index,R,maxiters)
-%   TFbsTensor impute the missing TF-biding data based on observed datasets. 
-%   It model the TF-binding dataset with a tensor, and  fits a weighted CP
+%   TFbsTensor imputes the missing TF-biding data based on the observed datasets. 
+%   It models the TF-binding datasets with a 3-mode tensor, and  fits a weighted CP
 %    model to the  tensor  with missing values via optimization. Then the
 %   missing entries can be predicted. 
 %
 %   Mat_return = TFbsTensor(Matrix_o,index_M, test_Index,R) fits an R-component weighted CANDECOMP/PARAFAC
 %   (CP) model to the tensor that models the observed datasets Matrix_o,
-%   and predict the data for samples that indexed in test_Index. The result
-%   Mat_return is the predicted data for sample( or samples) indexed in test_Index. 
+%   and predicts the data for samples that indexed by test_Index. The result
+%   Mat_return is the predicted data for the sample( or samples) indexed by test_Index. 
 %
 %   Mat_return=TFbsTensor(Matrix_o,index_M, test_Index,R,maxiters)
 %   The papameters and the details are as follows:
-%       'Matrix_o' -  It is the matrix of observed datasets. Each row represents the genome-wide TF-binding profile  of a  TF_cell
-%       sample. The rows are sample indexes of the matrix, the comlums are  the positions in the genome. 
-%      'index_M' - index_M is the sample index for the matrix Matrix_o. Each row of index_M represents the {TF,cell} index of a sample.  index_M=[TF_index, cell_index]; 
-%      'test_Index' - For the samples you want to predict. test_Indexrepresents the index of the samples.  test_Index=[TF_index, cell_index]; 
-%      'R' - R is the rank of the tensor. That is, the number of components in the  CPmodel
+%      'Matrix_o' -  It is the matrix of the observed datasets. Each row represents the genome-wide TF-binding profile  of a  TF_cell
+%       sample. The rows are the samples, the comlums are the positions in the genome for each sample. 
+%      'index_M' - index_M is the sample index for the matrix Matrix_o. Each row of index_M represents the {TF,cell} index of a sample. Specifically, index_M=[TF_index, cell_index]; 
+%      'test_Index' - For the samples you want to predict, test_Index represents the index of the samples.  Specificlly, test_Index=[TF_index, cell_index]; 
+%      'R' - R is the rank of the tensor. That is, the number of components in the  CP model
 %      'maxiters' - Maximum number of iterations. The default value is  50.
 % 
 
@@ -37,7 +37,7 @@ fit=[];fitold=0;
 %% CP_als, the main function
 for iters=1:5
     %% CP_als, the main function
-    %%Fit CP using CP_WOPT by ignoring missing entries
+    %%Fit CP using cp_als by ignoring missing entries
     % Initialization for factor matrices.
     M= normrnd(0,digital,num_m,R);
     C = normrnd(0,digital,num_c,R);
@@ -111,7 +111,7 @@ for iters=1:5
     Mat_o_impute=Mat_o_impute';
     
     % Cumpute fitness.  
-    fit=1- norm((Mat_o_impute-Matrix_o),'fro')/normMat;%resdual of the predicted data on observed entries.  
+    fit=1- norm((Mat_o_impute-Matrix_o),'fro')/normMat; %fitniss of the predicted data on observed entries.  
         
     % Get the predicted data of the test sample.
     TF_index_test=test_Index(:,1);
