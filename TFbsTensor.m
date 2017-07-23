@@ -1,7 +1,7 @@
 function [Mat_return]=TFbsTensor(Matrix_o,index_M, test_Index,R,maxiters)
 %   TFbsTensor imputes the missing TF-biding data based on the observed datasets. 
 %   It models the existing TF-binding datasets as a 3-mode tensor, where the three modes represent the TF, cell line, and genomic locus. Then it fits a weighted CP
-%    model to the  tensor  with missing values via optimization. As a result, the
+%    model to the  tensor  with missing values via optimization. Finally, the
 %   missing entries can be predicted. 
 %
 %   Mat_return = TFbsTensor(Matrix_o,index_M, test_Index,R) fits an R-component weighted CANDECOMP/PARAFAC
