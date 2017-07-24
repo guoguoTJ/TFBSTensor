@@ -95,7 +95,7 @@ for iters=1:5
             
             [U,D] = eig((A+A')/2);
             D = max(diag(D),0);
-            C(i,:)=(U*diag(1./(D+mean(D)*1e-6))*U'*B)';%M(i,:)=(inv(A)*B)';
+            C(i,:)=(U*diag(1./(D+mean(D)*1e-6))*U'*B)';
         end
     end
     
