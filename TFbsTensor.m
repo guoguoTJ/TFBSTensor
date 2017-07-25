@@ -35,7 +35,7 @@ digital = 1e-8;
 fit=[];fitold=0;
 w=1e-9;
 %% CP_als, the main function
-for iters=1:5
+for iters=1:8
     %% CP_als, the main function
     %%Fit CP using cp_als by ignoring missing entries
     % Initialization for factor matrices.
