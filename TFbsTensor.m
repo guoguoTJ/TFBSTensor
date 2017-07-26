@@ -71,13 +71,13 @@ for iters=1:8
         %Step 2: Given fact matrix C and G, update M.
         A1 = ((G'*G));
         for i = 1:num_m
-            o= O(O(:,1)==i,:);
+            o= O(O(:,1)==TF_uni(i),:);
             A=0; B=0;
-            if sum(O(:,1)==i)==0
+            if sum(O(:,1)==TF_uni(i))==0
                 continue;
             end
             
-            P = PP(:,O(:,1)==i);
+            P = PP(:,O(:,1)==TF_uni(i));
             len=size(o,1);
             for j = 1:len
                 B = B + (C(o(j,2),:))'.*P(:,j);
@@ -89,12 +89,12 @@ for iters=1:8
         
         %Step 3:Given factor matrix M and G, update C.
         for i=1:num_c
-            o=O(O(:,2)==i,:);%
+            o=O(O(:,2)==cell_uni(i),:);%
             A=0;B=0;
-            if sum(O(:,2)==i)==0
+            if sum(O(:,2)==cell_uni(i))==0
                 continue;
             end
-            P = PP(:,O(:,2)==i);
+            P = PP(:,O(:,2)==cell_uni(i));
             len=size(o,1);
             for j = 1:len
                 B = B + (M(o(j,1),:))'.*P(:,j);
@@ -121,7 +121,7 @@ for iters=1:8
     Mat_o_impute=Mat_o_impute';
     
     % Cumpute fitness.
-    res(iter)=norm((Mat_o_impute-Matrix_o),'fro')/normMat; %fitniss of the predicted data on observed entries.
+   fit= 1-norm((Mat_o_impute-Matrix_o),'fro')/normMat; %fitniss of the predicted data on observed entries.
     
     % Get the predicted data of the test sample.
     TF_index_test=P_index(:,1);
