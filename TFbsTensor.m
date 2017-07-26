@@ -1,4 +1,4 @@
-function [Mat_return]=TFbsTensor(Matrix_o,index_M, test_Index,R,maxiters)
+%function [Mat_return]=TFbsTensor_v1(Matrix_o,index_M, test_Index,R,maxiters)
 %   TFbsTensor imputes the missing TF-biding data based on the observed datasets.
 %   It models the existing TF-binding datasets as a 3-mode tensor, where the three modes represent the TF, cell line, and genomic locus. Then it fits a weighted CP
 %    model to the  tensor  with missing values via optimization. Finally, the
@@ -19,15 +19,30 @@ function [Mat_return]=TFbsTensor(Matrix_o,index_M, test_Index,R,maxiters)
 %      'maxiters' - Maximum number of iterations. The default value is  50.
 %
 
-%% Extract number of dimensions and norm of obseved matrix.
+%% Extract  dimensions of tensor and norm of obseved matrix.
 normMat=norm(Matrix_o,'fro');% Frobenious norm of obseved matrix Matrix_o;
-O=index_M;
+
 TF_index=index_M(:,1);
 cell_index=index_M(:,2);
 num_g=size(Matrix_o,2);
 num_m=length(unique(TF_index));
 num_c=length(unique(cell_index));
 num_observe= length(TF_index);
+TF_uni=unique(TF_index);% the TF index of the tensor.
+cell_uni=unique(cell_index); % the cell index of the tensor .
+% get the index of the observed data in the tensor.
+O=zeros(size(index_M));
+for i=1:size(index_M,1)
+    O(i,1)=find(TF_uni== index_M(i,1));
+    O(i,2)=find(cell_uni ==index_M(i,2));
+end
+
+% get the index of the data to predict in the tensor.
+P_index=zeros(size(test_Index));
+for i=1:size(test_Index,1)
+    P_index(i,1)=find(TF_uni== test_Index(i,1));
+    P_index(i,2)=find(cell_uni ==test_Index(i,2));
+end
 
 %% Initialization
 X=zeros(num_observe,R);
@@ -43,7 +58,7 @@ for iters=1:8
     C = normrnd(0,digital,num_c,R);
     G= normrnd(0,digital,num_g,R);
     I=eye(R);
-    
+
     % Main Loop of the ALS algorithm: Iterate until convergence
     for iter = 1:maxiters
         % Step1: Given factor matrix M and C, update G.
@@ -88,12 +103,16 @@ for iters=1:8
             end
             C(i,:)=((A+w*I)\B)';
         end
+ 
     end
+
     
     % Get the predicted matrix of Matrix_o from the predicted tensor.
-    len=length(TF_index);
-    Mat_o_impute = zeros(num_g,length(TF_index),'single');%
-    MC=M(TF_index,:).*C(cell_index,:);
+    TF_o_index=O(:,1);
+    cell_o_index=O(:,2);
+    len=length(TF_o_index);
+    Mat_o_impute = zeros(num_g,len,'single');%
+    MC=M(TF_o_index,:).*C(cell_o_index,:);
     GMC=gpuArray(single(MC));
     GG=gpuArray(single(G));
     for k = 1:len
@@ -102,11 +121,11 @@ for iters=1:8
     Mat_o_impute=Mat_o_impute';
     
     % Cumpute fitness.
-    fit=1- norm((Mat_o_impute-Matrix_o),'fro')/normMat; %fitniss of the predicted data on observed entries.
+    res(iter)=norm((Mat_o_impute-Matrix_o),'fro')/normMat; %fitniss of the predicted data on observed entries.
     
     % Get the predicted data of the test sample.
-    TF_index_test=test_Index(:,1);
-    cell_index_test=test_Index(:,2);
+    TF_index_test=P_index(:,1);
+    cell_index_test=P_index(:,2);
     len=length(TF_index_test);
     Mat_p = zeros(num_g,length(TF_index_test),'single');%
     MC=M(TF_index_test,:).*C(cell_index_test,:);
