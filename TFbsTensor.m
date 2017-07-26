@@ -77,7 +77,7 @@ for iters=1:8
                 continue;
             end
             
-            P = PP(:,O(:,1)==TF_uni(i));
+            P = PP(:,index_M(:,1)==TF_uni(i));
             len=size(o,1);
             for j = 1:len
                 B = B + (C(o(j,2),:))'.*P(:,j);
@@ -94,7 +94,7 @@ for iters=1:8
             if sum(O(:,2)==cell_uni(i))==0
                 continue;
             end
-            P = PP(:,O(:,2)==cell_uni(i));
+            P = PP(:,index_M(:,2)==cell_uni(i));
             len=size(o,1);
             for j = 1:len
                 B = B + (M(o(j,1),:))'.*P(:,j);
