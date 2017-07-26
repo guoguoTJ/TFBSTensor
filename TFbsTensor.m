@@ -26,8 +26,8 @@ num_g=size(Matrix_o,2);
 num_m=length(unique(TF_index));
 num_c=length(unique(cell_index));
 num_observe= length(TF_index);
-TF_uni=unique(TF_index);% the TFs and their index in the tensor.
-cell_uni=unique(cell_index); % the cells and their index in the tensor .
+TF_uni=unique(TF_index);% the TFs  in the tensor. In the following  tensor modeling the TF-binidng data, the TF dimension of the tensor is arraged by the index in the TF_uni. 
+cell_uni=unique(cell_index); % the cells  in the tensor . In the following  tensor modeling the TF-binidng data, the cell dimension is arraged by the index in the cell_uni. 
 % get the index of the observed data in the tensor.
 O=zeros(size(index_M));
 for i=1:size(index_M,1)
@@ -71,13 +71,10 @@ for iters=1:8
         %Step 2: Given fact matrix C and G, update M.
         A1 = ((G'*G));
         for i = 1:num_m
-            o= O(O(:,1)==TF_uni(i),:);
+            o= O(O(:,1)==i,:);
             A=0; B=0;
-            if sum(O(:,1)==TF_uni(i))==0
-                continue;
-            end
             
-            P = PP(:,index_M(:,1)==TF_uni(i));
+            P = PP(:,O(:,1)==i);
             len=size(o,1);
             for j = 1:len
                 B = B + (C(o(j,2),:))'.*P(:,j);
@@ -89,12 +86,10 @@ for iters=1:8
         
         %Step 3:Given factor matrix M and G, update C.
         for i=1:num_c
-            o=O(O(:,2)==cell_uni(i),:);%
+            o=O(O(:,2)==i,:);%
             A=0;B=0;
-            if sum(O(:,2)==cell_uni(i))==0
-                continue;
-            end
-            P = PP(:,index_M(:,2)==cell_uni(i));
+
+            P = PP(:,O(:,2)==i);
             len=size(o,1);
             for j = 1:len
                 B = B + (M(o(j,1),:))'.*P(:,j);
