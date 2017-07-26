@@ -20,16 +20,14 @@
 %
 
 %% Extract  dimensions of tensor and norm of obseved matrix.
-normMat=norm(Matrix_o,'fro');% Frobenious norm of obseved matrix Matrix_o;
-
 TF_index=index_M(:,1);
 cell_index=index_M(:,2);
 num_g=size(Matrix_o,2);
 num_m=length(unique(TF_index));
 num_c=length(unique(cell_index));
 num_observe= length(TF_index);
-TF_uni=unique(TF_index);% the TF index of the tensor.
-cell_uni=unique(cell_index); % the cell index of the tensor .
+TF_uni=unique(TF_index);% the TFs and their index in the tensor.
+cell_uni=unique(cell_index); % the cells and their index in the tensor .
 % get the index of the observed data in the tensor.
 O=zeros(size(index_M));
 for i=1:size(index_M,1)
@@ -43,6 +41,8 @@ for i=1:size(test_Index,1)
     P_index(i,1)=find(TF_uni== test_Index(i,1));
     P_index(i,2)=find(cell_uni ==test_Index(i,2));
 end
+
+normMat=norm(Matrix_o,'fro');% Frobenious norm of obseved matrix Matrix_o;
 
 %% Initialization
 X=zeros(num_observe,R);
